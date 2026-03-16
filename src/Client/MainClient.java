@@ -2,35 +2,38 @@ package Client;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.*;
 
 public class MainClient {
     public static void main(String[] args) {
 
         try {
-            InetAddress serverAddress = InetAddress.getLocalHost();//1 prendiamo l' indirizzo del server
+            InetAddress serverAddress = InetAddress.getLocalHost();
             System.out.println("Indirizzo del server trovato!");
-            DatagramSocket dSocket = new DatagramSocket();//2 instanzio una datagram socket
-            String message = "ciao";//3 scrivo un messaggio
+            DatagramSocket dSocket = new DatagramSocket();
+
+            // Lettura messaggio da tastiera
+            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+            System.out.print("Inserisci il messaggio: ");
+            String message = reader.readLine();
+
             int port = 3000;
             DatagramPacket outPacket = new DatagramPacket(message.getBytes(), message.length(), serverAddress, port);
-            dSocket.send(outPacket);//4 spedisco il messaggio
+            dSocket.send(outPacket);
 
-            // 1 ricevo le informazioni nel buffer in
             byte[] buffer = new byte[256];
-            // 2 decido il nome del datagram packet
             DatagramPacket inPacket = new DatagramPacket(buffer, buffer.length);
-            // 3 metodo bloccante
             dSocket.receive(inPacket);
-            // 4 stampo che ho ricevuto i messagi
-            System.out.println("Ricezione effettuata" + inPacket);
+            System.out.println("Ricezione effettuata: " + new String(inPacket.getData(), 0, inPacket.getLength()));
             dSocket.close();
+
         } catch (UnknownHostException e) {
             System.err.println("non trovo l'indirizzo del server");
-        } catch(SocketException e){
+        } catch (SocketException e) {
             System.err.println("socket non trovato");
-        } catch (IOException e){
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
-    }
+}

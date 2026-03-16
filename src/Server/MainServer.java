@@ -20,7 +20,7 @@ public class MainServer {
             System.out.println("Ricezione effettuata");
 
             //1 prendiamo l' indirizzo del client
-            String message = new String (inPacket.getData(), inPacket.getLength());
+            String message = new String(inPacket.getData(), 0, inPacket.getLength());
             InetAddress clientAddress = inPacket.getAddress();
             int p = inPacket.getPort();
             //2 instanzio una datagram socket
